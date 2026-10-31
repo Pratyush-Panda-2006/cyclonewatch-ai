@@ -13,7 +13,9 @@ load_dotenv(dotenv_path=BASE_DIR / ".env")
 
 # AI inference settings
 GEMINI_API_KEY = os.getenv("GEMINI_API_KEY", "")
+GROQ_API_KEY = os.getenv("GROQ_API_KEY", "")
 DEFAULT_MODEL = os.getenv("GEMMA_MODEL", "gemma-4-26b-a4b-it")
+GROQ_MODEL = os.getenv("GROQ_MODEL", "openai/gpt-oss-20b")
 
 # Coastal Odisha Geo-bounding settings (Bhubaneswar and disaster corridor)
 BHUBANESWAR_CENTER_LAT = 20.2961

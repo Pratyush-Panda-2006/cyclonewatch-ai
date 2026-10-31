@@ -129,49 +129,5 @@
     "timestamp": "2026-10-31T10:25:00Z",
     "image_filename": "seed_puri_surge_debris.jpg",
     "is_gps_fallback": false
-  },
-  {
-    "id": "inc-a1d68177",
-    "latitude": 20.35255,
-    "longitude": 85.8169,
-    "location_name": "Patia InfoCity Corridor, Bhubaneswar, Odisha",
-    "hazard_type": "Structural Wall Collapse & Road Debris",
-    "severity": "MEDIUM",
-    "affected_infrastructure": [
-      "Residential Enclosure",
-      "Secondary Roadway"
-    ],
-    "hazard_summary": "Boundary wall collapse resulting from cyclone wind loading and saturated soil foundation. Sidewalk obstructed with masonry rubble.",
-    "recommended_response": "Clear secondary lane debris with backhoe loader and inspect adjoining structures for foundation subsidence.",
-    "required_personnel": [
-      "BMC Drainage",
-      "Municipal Engineering Squad",
-      "Civil Defence"
-    ],
-    "timestamp": "2026-10-31T10:04:24.591110+00:00",
-    "image_filename": "inc-a1d68177.jpg",
-    "is_gps_fallback": true
-  },
-  {
-    "id": "inc-ae580e6c",
-    "latitude": 20.35255,
-    "longitude": 85.8169,
-    "location_name": "Patia InfoCity Corridor, Bhubaneswar, Odisha",
-    "hazard_type": "Structural Wall Collapse & Road Debris",
-    "severity": "MEDIUM",
-    "affected_infrastructure": [
-      "Residential Enclosure",
-      "Secondary Roadway"
-    ],
-    "hazard_summary": "Boundary wall collapse resulting from cyclone wind loading and saturated soil foundation. Sidewalk obstructed with masonry rubble.",
-    "recommended_response": "Clear secondary lane debris with backhoe loader and inspect adjoining structures for foundation subsidence.",
-    "required_personnel": [
-      "BMC Drainage",
-      "Municipal Engineering Squad",
-      "Civil Defence"
-    ],
-    "timestamp": "2026-10-31T10:04:43.346675+00:00",
-    "image_filename": "inc-ae580e6c.jpg",
-    "is_gps_fallback": true
   }
 ]

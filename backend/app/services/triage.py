@@ -2,10 +2,9 @@ import json
 import logging
 import re
 from typing import Optional
-from PIL import Image
-import io
+import httpx
 
-from app.config import GEMINI_API_KEY, DEFAULT_MODEL
+from app.config import GEMINI_API_KEY, GROQ_API_KEY, DEFAULT_MODEL, GROQ_MODEL
 from app.schemas import GemmaTriageSchema, SeverityLevel
 
 logger = logging.getLogger("cyclonewatch.triage")
@@ -38,15 +37,12 @@ Do NOT return Markdown fences, preambles, or explanations. Return valid JSON onl
 
 
 def _clean_json_response(raw_text: str) -> str:
-    """
-    Cleans markdown formatting fences (```json ... ```) from LLM output.
-    """
+    """Cleans markdown formatting fences (```json ... ```) from LLM output."""
     text = raw_text.strip()
     match = re.search(r"```(?:json)?\s*(\{.*?\})\s*```", text, re.DOTALL)
     if match:
         return match.group(1)
     
-    # Check if text contains a json object
     start = text.find("{")
     end = text.rfind("}")
     if start != -1 and end != -1 and end > start:
@@ -56,10 +52,7 @@ def _clean_json_response(raw_text: str) -> str:
 
 
 def _heuristic_fallback_triage(context_hint: Optional[str] = None) -> GemmaTriageSchema:
-    """
-    Resilient fallback triage analyzer for test environments or when API key is unavailable.
-    Generates realistic State Emergency Operations Centre (SEOC) incident classification.
-    """
+    """Resilient fallback triage analyzer for test environments or offline mode."""
     hint = (context_hint or "").lower()
     if "electric" in hint or "wire" in hint or "cable" in hint or "transformer" in hint:
         return GemmaTriageSchema(
@@ -99,54 +92,114 @@ def _heuristic_fallback_triage(context_hint: Optional[str] = None) -> GemmaTriag
         )
 
 
+async def _triage_via_groq(context_hint: Optional[str] = None) -> Optional[GemmaTriageSchema]:
+    """Inference via Groq API."""
+    if not GROQ_API_KEY:
+        return None
+
+    try:
+        prompt_content = TRIAGE_SYSTEM_PROMPT
+        if context_hint:
+            prompt_content += f"\nIncident Context & Location Telemetry: {context_hint}"
+
+        headers = {
+            "Authorization": f"Bearer {GROQ_API_KEY}",
+            "Content-Type": "application/json",
+            "User-Agent": "Mozilla/5.0"
+        }
+        payload = {
+            "model": GROQ_MODEL,
+            "messages": [
+                {"role": "system", "content": TRIAGE_SYSTEM_PROMPT},
+                {"role": "user", "content": f"Analyze incident at: {context_hint or 'Coastal Odisha Disaster Corridor'}. Respond strictly with valid JSON."}
+            ],
+            "temperature": 0.2,
+            "response_format": {"type": "json_object"}
+        }
+
+        async with httpx.AsyncClient(timeout=10.0) as client:
+            r = await client.post("https://api.groq.com/openai/v1/chat/completions", headers=headers, json=payload)
+            if r.status_code == 200:
+                data = r.json()
+                content = data["choices"][0]["message"]["content"]
+                parsed = json.loads(_clean_json_response(content))
+                logger.info(f"Groq ({GROQ_MODEL}) inference successful.")
+                return GemmaTriageSchema(
+                    hazard_type=parsed.get("hazard_type", "Coastal Hazard"),
+                    severity=SeverityLevel(parsed.get("severity", "HIGH").upper()),
+                    affected_infrastructure=parsed.get("affected_infrastructure", ["Civic Infrastructure"]),
+                    hazard_summary=parsed.get("hazard_summary", "Incident classified via Groq inference."),
+                    recommended_response=parsed.get("recommended_response", "Dispatch regional emergency units."),
+                    required_personnel=parsed.get("required_personnel", ["Odisha Fire Services", "ODRAF"])
+                )
+    except Exception as e:
+        logger.warning(f"Groq inference failed: {e}")
+    return None
+
+
 async def analyze_hazard_multimodal(
     image_bytes: bytes,
     mime_type: str = "image/jpeg",
     location_context: Optional[str] = None
 ) -> GemmaTriageSchema:
     """
-    Performs multimodal scene analysis using Google GenAI SDK targeting Gemma 4 (gemma-4-26b-a4b-it).
-    Falls back gracefully if the API key is not configured or in case of transient model unavailability.
+    Performs multimodal scene analysis using Google GenAI Gemma 4 (gemma-4-26b-a4b-it)
+    with Groq API secondary backup and deterministic SEOC heuristics fallback.
     """
-    if not GEMINI_API_KEY:
-        logger.warning("GEMINI_API_KEY not configured. Utilizing SEOC rule-based fallback analyzer.")
-        return _heuristic_fallback_triage(location_context)
+    # 1. Primary: Gemma 4 Multimodal Vision via Google GenAI SDK
+    if GEMINI_API_KEY:
+        try:
+            from google import genai
+            from google.genai import types
 
-    try:
-        from google import genai
-        from google.genai import types
+            client = genai.Client(api_key=GEMINI_API_KEY)
 
-        client = genai.Client(api_key=GEMINI_API_KEY)
+            prompt_text = TRIAGE_SYSTEM_PROMPT
+            if location_context:
+                prompt_text += f"\nAdditional Location Context: {location_context}"
 
-        prompt_text = TRIAGE_SYSTEM_PROMPT
-        if location_context:
-            prompt_text += f"\nAdditional Location Context: {location_context}"
-
-        # Build multimodal payload with image bytes and instructions
-        part_image = types.Part.from_bytes(data=image_bytes, mime_type=mime_type)
-        
-        response = client.models.generate_content(
-            model=DEFAULT_MODEL,
-            contents=[part_image, prompt_text],
-            config=types.GenerateContentConfig(
-                response_mime_type="application/json",
-                temperature=0.2,
+            part_image = types.Part.from_bytes(data=image_bytes, mime_type=mime_type)
+            
+            response = client.models.generate_content(
+                model=DEFAULT_MODEL,
+                contents=[part_image, prompt_text],
+                config=types.GenerateContentConfig(
+                    response_mime_type="application/json",
+                    temperature=0.2,
+                )
             )
-        )
 
-        raw_text = response.text or ""
-        cleaned_json = _clean_json_response(raw_text)
-        data = json.loads(cleaned_json)
+            raw_text = response.text or ""
+            cleaned_json = _clean_json_response(raw_text)
+            data = json.loads(cleaned_json)
+            logger.info(f"Gemma 4 ({DEFAULT_MODEL}) multimodal vision analysis successful.")
 
-        return GemmaTriageSchema(
-            hazard_type=data.get("hazard_type", "Unclassified Coastal Hazard"),
-            severity=SeverityLevel(data.get("severity", "MEDIUM").upper()),
-            affected_infrastructure=data.get("affected_infrastructure", ["Civic Infrastructure"]),
-            hazard_summary=data.get("hazard_summary", "Incident logged via field telemetry."),
-            recommended_response=data.get("recommended_response", "Dispatch regional quick response team for on-site assessment."),
-            required_personnel=data.get("required_personnel", ["Odisha Fire Services", "ODRAF"])
-        )
+            raw_units = data.get("required_personnel") or ["Odisha Fire Services", "ODRAF"]
+            raw_infra = data.get("affected_infrastructure") or ["Civic Infrastructure"]
+            raw_sev = data.get("severity", "MEDIUM")
+            if isinstance(raw_sev, str):
+                raw_sev = raw_sev.upper().strip()
+                if raw_sev not in ["CRITICAL", "HIGH", "MEDIUM", "LOW"]:
+                    raw_sev = "MEDIUM"
 
-    except Exception as exc:
-        logger.error(f"Gemma 4 multimodal inference error: {exc}. Engaging resilient fallback.", exc_info=True)
-        return _heuristic_fallback_triage(location_context)
+            return GemmaTriageSchema(
+                hazard_type=data.get("hazard_type") or "Unclassified Coastal Hazard",
+                severity=SeverityLevel(raw_sev),
+                affected_infrastructure=raw_infra,
+                hazard_summary=data.get("hazard_summary") or "Incident logged via field telemetry.",
+                recommended_response=data.get("recommended_response") or "Dispatch regional quick response team for on-site assessment.",
+                required_personnel=raw_units
+            )
+
+        except Exception as exc:
+            logger.warning(f"Gemma 4 multimodal inference error: {exc}. Engaging Groq backup.")
+
+    # 2. Backup: Groq API Inference
+    if GROQ_API_KEY:
+        groq_result = await _triage_via_groq(location_context)
+        if groq_result:
+            return groq_result
+
+    # 3. Resilient SEOC Heuristic Fallback
+    logger.info("Engaging SEOC rule-based fallback analyzer.")
+    return _heuristic_fallback_triage(location_context)
