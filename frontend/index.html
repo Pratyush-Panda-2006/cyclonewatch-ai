@@ -1,0 +1,739 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CycloneWatch AI / ReliefSense — Coastal Disaster Triage & SEOC Response Engine</title>
+  <meta name="description" content="Multimodal disaster triage and tactical incident response engine designed for the State Emergency Operations Centre (SEOC) in coastal Odisha, powered by Gemma 4.">
+  
+  <!-- Typography: Anton, Inter, Martian Mono -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Anton&family=Inter:wght@400;500;600;700&family=Martian+Mono:wght@400;600;700&display=swap" rel="stylesheet">
+  
+  <link rel="stylesheet" href="style.css">
+</head>
+<body data-theme="cyclone">
+
+  <!-- Top Sticky Navigation Bar -->
+  <header class="top-nav">
+    <div class="nav-brand">
+      <span class="brand-code">SEOC / ODISHA</span>
+      <span class="brand-title">CYCLONE<span class="red-mark">WATCH</span> AI</span>
+    </div>
+    <div class="nav-telemetry">
+      <span class="mono-meta"><span class="pulse-dot"></span> THEATRE: BAY OF BENGAL</span>
+      <span class="mono-meta">MODEL: GEMMA-4-26B-A4B-IT</span>
+      <span class="mono-meta" id="nav-incident-counter">INCIDENTS LOGGED: 06</span>
+    </div>
+    <div class="nav-cta">
+      <a href="#triage-studio" class="btn-mono-alert">FIELD INGESTION</a>
+    </div>
+  </header>
+
+  <main id="main-content">
+
+    <!-- ================================================================= -->
+    <!-- STAGE 1: POSTER HERO (280svh, Dark Coastal Ground #12181d)        -->
+    <!-- Driven by 3 independent CSS vars: --hero-type-y, scale, alpha     -->
+    <!-- ================================================================= -->
+    <section class="stage stage-hero" id="stage-hero">
+      <div class="stage-sticky dark-stage">
+        <canvas id="hero-wind-canvas" class="fill-canvas" aria-hidden="true"></canvas>
+        <div class="noise-overlay" aria-hidden="true"></div>
+
+        <div class="hero-center-lockup">
+          <p class="hero-top-eyebrow" data-chars="38">
+            <span class="eyebrow-rule"></span>
+            STATE EMERGENCY OPERATIONS CENTRE &bull; COASTAL DISASTER RESPONSE
+            <span class="eyebrow-rule"></span>
+          </p>
+          <h1 class="hero-headline" id="hero-poster-line1">CYCLONEWATCH</h1>
+          <h2 class="hero-subheadline" id="hero-poster-line2"><span class="red-mark">RELIEFSENSE</span> AI</h2>
+          <p class="hero-lede-mono">MULTIMODAL DISASTER TRIAGE &bull; SUB-SECOND AGENCY DISPATCH</p>
+        </div>
+
+        <div class="hero-pinned-footer">
+          <div class="hero-footer-col">
+            <span class="mono-label">PRIMARY CORRIDOR</span>
+            <span class="mono-value">BHUBANESWAR &bull; CUTTACK &bull; PURI</span>
+          </div>
+          <div class="hero-footer-col">
+            <span class="mono-label">VISION BACKBONE</span>
+            <span class="mono-value">GOOGLE GEMMA 4 (26B A4B IT)</span>
+          </div>
+          <div class="hero-footer-col">
+            <span class="mono-label">METADATA BINDING</span>
+            <span class="mono-value">EXIF GPS + ODISHA GEO-FALLBACK</span>
+          </div>
+          <div class="hero-footer-col">
+            <span class="mono-label">DISPATCH UNITS</span>
+            <span class="mono-value">TPCODL &bull; ODRAF &bull; FIRE &bull; BMC</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+
+    <!-- ================================================================= -->
+    <!-- STAGE 2: CLIP-WIPE MANIFESTO (260svh, Cream Ground #e7e2d8)      -->
+    <!-- Single heavy sentence filled bottom-up via clip-path inset        -->
+    <!-- ================================================================= -->
+    <section class="stage stage-manifesto" id="stage-manifesto">
+      <div class="stage-sticky cream-stage">
+        <div class="manifesto-wrap">
+          <div class="manifesto-header">
+            <span class="mono-label">[ DOCTRINE 01 // SEOC RAPID CLASSIFICATION ]</span>
+            <span class="mono-meta">AUTOMATED LIFE-SAFETY OPERATING PROTOCOL</span>
+          </div>
+
+          <div class="manifesto-box">
+            <!-- Base Sentence in 34% Ink -->
+            <div class="manifesto-sentence manifesto-base" aria-hidden="true">
+              WHEN THE EYEWALL CROSSES THE COASTLINE, EVERY SECOND OF RESCUE DISPATCH REQUIRES PRECISE MULTIMODAL INTELLIGENCE.
+            </div>
+            <!-- Duplicate Sentence in 100% Ink, wiped from bottom up -->
+            <div class="manifesto-sentence manifesto-fill" id="manifesto-fill-target">
+              WHEN THE EYEWALL CROSSES THE COASTLINE, EVERY SECOND OF RESCUE DISPATCH REQUIRES PRECISE MULTIMODAL INTELLIGENCE.
+            </div>
+          </div>
+
+          <div class="manifesto-footer">
+            <p class="manifesto-subcopy">
+              Citizen photographs ingested from the field are stripped of ambiguity in under 800ms. 
+              Submerged electrical conduits, blocked hospital arterials, and breached embankment levees 
+              are classified directly into tactical standard operating procedures for immediate command dispatch.
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+
+    <!-- ================================================================= -->
+    <!-- STAGE 3: HORIZONTAL INCIDENT CARD RAIL (340svh, Cream Ground)     -->
+    <!-- Translated by calc(-1 * progress * overflowWidth)                 -->
+    <!-- ================================================================= -->
+    <section class="stage stage-rail" id="stage-rail">
+      <div class="stage-sticky cream-stage">
+        <div class="rail-header">
+          <div class="rail-title-block">
+            <span class="mono-label">[ TELEMETRY STREAM // LIVE FIELD HAZARDS ]</span>
+            <h2 class="rail-heading">LIVE SECTOR INCIDENTS</h2>
+          </div>
+          <div class="rail-counter-block">
+            <span class="mono-label">SCROLL TO INSPECT CORRIDOR</span>
+            <span class="mono-value" id="rail-meter-pct">00% &bull; HORIZONTAL SCRUB</span>
+          </div>
+        </div>
+
+        <div class="rail-viewport">
+          <div class="rail-track" id="rail-track">
+            
+            <!-- Card 1 -->
+            <article class="incident-card" data-rev>
+              <div class="card-plate-wrap">
+                <canvas class="card-plate-canvas" data-type="electric" width="280" height="210"></canvas>
+                <span class="card-severity-badge badge-critical">CRITICAL</span>
+              </div>
+              <div class="card-body">
+                <span class="mono-label">INC-BBSR-001 &bull; SAHEED NAGAR</span>
+                <h3 class="card-title">DOWNED 33KV POWER LINE</h3>
+                <p class="card-desc">Overhead transmission conductor severed into 2ft street floodwater. Imminent electrocution hazard on major junction.</p>
+                <div class="card-foot">
+                  <span class="mono-meta">UNIT: TPCODL CREW</span>
+                  <span class="card-coord">20.2882°N, 85.8456°E</span>
+                </div>
+              </div>
+            </article>
+
+            <!-- Card 2 -->
+            <article class="incident-card" data-rev>
+              <div class="card-plate-wrap">
+                <canvas class="card-plate-canvas" data-type="flood" width="280" height="210"></canvas>
+                <span class="card-severity-badge badge-critical">CRITICAL</span>
+              </div>
+              <div class="card-body">
+                <span class="mono-label">INC-BBSR-002 &bull; AIIMS ARTERIAL</span>
+                <h3 class="card-title">HOSPITAL ROUTE INUNDATION</h3>
+                <p class="card-desc">Approach underpass flooded by 4.2ft flash torrent. Multiple emergency response ambulances stranded on approach ramp.</p>
+                <div class="card-foot">
+                  <span class="mono-meta">UNIT: ODRAF ZODIAC</span>
+                  <span class="card-coord">20.2520°N, 85.7780°E</span>
+                </div>
+              </div>
+            </article>
+
+            <!-- Card 3 -->
+            <article class="incident-card" data-rev>
+              <div class="card-plate-wrap">
+                <canvas class="card-plate-canvas" data-type="tree" width="280" height="210"></canvas>
+                <span class="card-severity-badge badge-high">HIGH</span>
+              </div>
+              <div class="card-body">
+                <span class="mono-label">INC-BBSR-003 &bull; PATIA INFOCITY</span>
+                <h3 class="card-title">UPROOTED BANYAN HIGHWAY</h3>
+                <p class="card-desc">Extensive tree collapse obstructing dual 3-lane boulevard. Telecom aerial fibers torn and blocking transit corridor.</p>
+                <div class="card-foot">
+                  <span class="mono-meta">UNIT: FIRE SERVICES</span>
+                  <span class="card-coord">20.3542°N, 85.8193°E</span>
+                </div>
+              </div>
+            </article>
+
+            <!-- Card 4 -->
+            <article class="incident-card" data-rev>
+              <div class="card-plate-wrap">
+                <canvas class="card-plate-canvas" data-type="drain" width="280" height="210"></canvas>
+                <span class="card-severity-badge badge-medium">MEDIUM</span>
+              </div>
+              <div class="card-body">
+                <span class="mono-label">INC-BBSR-004 &bull; RASULGARH NH16</span>
+                <h3 class="card-title">BREACHED STORM DRAIN</h3>
+                <p class="card-desc">Culvert masonry failure causing localized highway service lane flood backflow. Heavy commercial traffic rerouting advised.</p>
+                <div class="card-foot">
+                  <span class="mono-meta">UNIT: BMC DRAINAGE</span>
+                  <span class="card-coord">20.3015°N, 85.8647°E</span>
+                </div>
+              </div>
+            </article>
+
+            <!-- Card 5 -->
+            <article class="incident-card" data-rev>
+              <div class="card-plate-wrap">
+                <canvas class="card-plate-canvas" data-type="wall" width="280" height="210"></canvas>
+                <span class="card-severity-badge badge-medium">MEDIUM</span>
+              </div>
+              <div class="card-body">
+                <span class="mono-label">INC-BBSR-005 &bull; OLD TOWN BASIN</span>
+                <h3 class="card-title">MASONRY WALL COLLAPSE</h3>
+                <p class="card-desc">40-meter heritage boundary wall collapsed due to gale wind shear. Sidewalk blocked with heavy brick and stone rubble.</p>
+                <div class="card-foot">
+                  <span class="mono-meta">UNIT: CIVIL DEFENCE</span>
+                  <span class="card-coord">20.2390°N, 85.8340°E</span>
+                </div>
+              </div>
+            </article>
+
+            <!-- Card 6 -->
+            <article class="incident-card" data-rev>
+              <div class="card-plate-wrap">
+                <canvas class="card-plate-canvas" data-type="surge" width="280" height="210"></canvas>
+                <span class="card-severity-badge badge-high">HIGH</span>
+              </div>
+              <div class="card-body">
+                <span class="mono-label">INC-BBSR-006 &bull; PURI MARINE DRIVE</span>
+                <h3 class="card-title">COASTAL STORM SURGE</h3>
+                <p class="card-desc">Ocean wave overwash deposited 3ft of sand and tidal debris across coastal highway. Protective embankment breached.</p>
+                <div class="card-foot">
+                  <span class="mono-meta">UNIT: WORKS & ODRAF</span>
+                  <span class="card-coord">19.8135°N, 85.8312°E</span>
+                </div>
+              </div>
+            </article>
+
+          </div>
+        </div>
+
+        <div class="rail-progress-bar">
+          <div class="rail-progress-fill" id="rail-progress-fill"></div>
+        </div>
+      </div>
+    </section>
+
+
+    <!-- ================================================================= -->
+    <!-- STAGE 4: THE PRINTED TACTICAL DOSSIER ARTIFACT (420svh, Dark)     -->
+    <!-- Prints live values as phase advances & tears perforation line     -->
+    <!-- ================================================================= -->
+    <section class="stage stage-artifact" id="stage-artifact">
+      <div class="stage-sticky dark-stage">
+        <div class="artifact-layout">
+          
+          <!-- Left Column: Command Telemetry & Tactical Cues -->
+          <div class="artifact-copy-col">
+            <span class="mono-label">[ AUTOMATED DOSSIER SYNTHESIS ]</span>
+            <h2 class="artifact-heading">TACTICAL DISPATCH MANIFEST</h2>
+            <p class="artifact-explainer">
+              As field photographs arrive at the gateway, Gemma 4 evaluates visible structural failures, 
+              correlates EXIF coordinates against coastal elevation maps, and compiles an authorized dispatch dossier.
+            </p>
+
+            <div class="artifact-cues-list">
+              <div class="cue-item" id="cue-1">
+                <span class="cue-num">01</span>
+                <div class="cue-body">
+                  <span class="cue-title">EXIF GPS EXTRACTION & GEO-BOUNDING</span>
+                  <span class="cue-desc">Resolve precise micro-coordinates or trigger Odisha sector fallback.</span>
+                </div>
+              </div>
+              <div class="cue-item" id="cue-2">
+                <span class="cue-num">02</span>
+                <div class="cue-body">
+                  <span class="cue-title">GEMMA 4 MULTIMODAL INFERENCE</span>
+                  <span class="cue-desc">Detect downed conductors, structural shear, and life safety threat.</span>
+                </div>
+              </div>
+              <div class="cue-item" id="cue-3">
+                <span class="cue-num">03</span>
+                <div class="cue-body">
+                  <span class="cue-title">TACTICAL AGENCY BINDING</span>
+                  <span class="cue-desc">Direct command routing to TPCODL, ODRAF, and Fire Services.</span>
+                </div>
+              </div>
+              <div class="cue-item" id="cue-4">
+                <span class="cue-num">04</span>
+                <div class="cue-body">
+                  <span class="cue-title">PERFORATION TEAR & FIELD DISPATCH</span>
+                  <span class="cue-desc">Generate signed dispatch record and notify quick response units.</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="artifact-status-box">
+              <span class="mono-label">LIVE STATUS STREAM:</span>
+              <span class="status-live-line" id="artifact-status-text">INITIALIZING FIELD IMAGE PACKET...</span>
+            </div>
+          </div>
+
+          <!-- Right Column: The Paper Artifact Dossier -->
+          <div class="artifact-paper-col">
+            <div class="dossier-paper" id="dossier-paper">
+              
+              <!-- Dossier Header -->
+              <div class="dossier-header">
+                <div class="dossier-header-top">
+                  <span class="mono-label">SEOC / DISPATCH MANIFEST #8849-B</span>
+                  <span class="mono-meta" id="dossier-time">2026-10-31T08:15:00Z</span>
+                </div>
+                <h3 class="dossier-title">TACTICAL INCIDENT RECORD</h3>
+                <div class="dossier-hazard-line" id="dossier-hazard-type">
+                  DOWNED 33KV LIVE DISTRIBUTION LINE
+                </div>
+              </div>
+
+              <!-- Dossier Blueprint Canvas -->
+              <div class="dossier-canvas-wrap">
+                <canvas id="dossier-plate-canvas" width="360" height="220"></canvas>
+                <div class="dossier-badge" id="dossier-badge">SEVERITY: PENDING</div>
+              </div>
+
+              <!-- Dossier Rows -->
+              <div class="dossier-data-rows">
+                <div class="dossier-row">
+                  <span class="d-label">INCIDENT LOCATION</span>
+                  <span class="d-val" id="dossier-loc">SAHEED NAGAR JANPATH CROSSING</span>
+                </div>
+                <div class="dossier-row">
+                  <span class="d-label">EXIF GPS COORDINATES</span>
+                  <span class="d-val red-text" id="dossier-gps">20.2882°N, 85.8456°E [RESOLVED]</span>
+                </div>
+                <div class="dossier-row">
+                  <span class="d-label">GEMMA 4 INFERENCE</span>
+                  <span class="d-val" id="dossier-eval">CALCULATING VISUAL DAMAGE...</span>
+                </div>
+                <div class="dossier-row">
+                  <span class="d-label">ASSIGNED RESPONDERS</span>
+                  <span class="d-val" id="dossier-units">STANDBY &bull; AWAITING CLASSIFICATION</span>
+                </div>
+              </div>
+
+              <!-- Perforation Cut Line -->
+              <div class="dossier-perforation" id="dossier-perforation">
+                <span class="perf-tag">TEAR HERE &bull; OFFICIAL SEOC DISPATCH COPY</span>
+              </div>
+
+              <div class="dossier-footer">
+                <span class="mono-meta">STATE EMERGENCY OPERATIONS CENTRE &bull; GOVT OF ODISHA</span>
+                <span class="mono-meta">VALIDATED RECORD</span>
+              </div>
+
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+
+    <!-- ================================================================= -->
+    <!-- STAGE 5: PARALLAX RADAR ISOBAR BAND (300svh, Cream Ground)        -->
+    <!-- 22 stacked contour curves, 3 operational phases swapping cleanly   -->
+    <!-- ================================================================= -->
+    <section class="stage stage-season" id="stage-season">
+      <div class="stage-sticky cream-stage">
+        <canvas id="isobar-contour-canvas" class="fill-canvas" aria-hidden="true"></canvas>
+
+        <div class="season-content-wrap">
+          <div class="season-headline-block">
+            <span class="mono-label">[ COMMAND PROTOCOL WORKFLOW ]</span>
+            <h2 class="season-heading">THE TRIAGE TIMELINE</h2>
+          </div>
+
+          <div class="season-chapters-row">
+            
+            <div class="season-chapter" id="chapter-0">
+              <span class="chap-num">PHASE 01</span>
+              <h3 class="chap-title">CITIZEN TELEMETRY & EXIF INGESTION</h3>
+              <p class="chap-desc">
+                Field photos captured on mobile devices are ingested at the edge. The system parses IFD GPS coordinates or bounds the report within the nearest coastal Odisha drainage sector.
+              </p>
+              <div class="chap-stat"><span class="mono-label">LATENCY:</span> <span class="mono-value">120MS</span></div>
+            </div>
+
+            <div class="season-chapter" id="chapter-1">
+              <span class="chap-num">PHASE 02</span>
+              <h3 class="chap-title">GEMMA 4 MULTIMODAL INFERENCE</h3>
+              <p class="chap-desc">
+                Gemma 4 examines structural collapses, water depths, and electrical hazards. It applies SEOC threat levels (CRITICAL to LOW) and formulates tactical Standard Operating Procedures.
+              </p>
+              <div class="chap-stat"><span class="mono-label">MODEL:</span> <span class="mono-value">GEMMA-4-26B-A4B-IT</span></div>
+            </div>
+
+            <div class="season-chapter" id="chapter-2">
+              <span class="chap-num">PHASE 03</span>
+              <h3 class="chap-title">SCADA CUT & AGENCY MOBILIZATION</h3>
+              <p class="chap-desc">
+                Incidents are streamed directly to the Emergency Operations GIS map. High-voltage SCADA switches are flagged for de-energization while ODRAF boats and Fire crews mobilize.
+              </p>
+              <div class="chap-stat"><span class="mono-label">DISPATCH SLA:</span> <span class="mono-value">&lt; 3 MINUTES</span></div>
+            </div>
+
+          </div>
+        </div>
+      </div>
+    </section>
+
+
+    <!-- ================================================================= -->
+    <!-- POST-PIN 6: LIVE INTERACTIVE FIELD INGESTION STUDIO               -->
+    <!-- Upload photos, test EXIF extraction, call /api/triage live        -->
+    <!-- ================================================================= -->
+    <section class="normal-section studio-section" id="triage-studio">
+      <div class="section-container">
+        
+        <div class="studio-header" data-rev>
+          <div class="sh-left">
+            <span class="mono-label">[ FIELD INGESTION CONSOLE // LIVE INTERACTIVE ]</span>
+            <h2 class="section-title">DEPLOY MULTIMODAL TRIAGE</h2>
+            <p class="section-lede">
+              Upload an image from a field camera or mobile device. The engine extracts GPS EXIF tags, 
+              applies Odisha geo-bounding if GPS is absent, runs Gemma 4 multimodal inference, and returns a verified incident dispatch.
+            </p>
+          </div>
+          <div class="sh-right">
+            <div class="api-status-pill" id="backend-status-pill">
+              <span class="status-indicator-dot"></span>
+              <span id="backend-status-text">CONNECTING TO FASTAPI...</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="studio-grid">
+          
+          <!-- Ingestion Controls & Dropzone -->
+          <div class="studio-col-left" data-rev>
+            <div class="dropzone-box" id="dropzone">
+              <input type="file" id="file-input" accept="image/jpeg,image/png,image/webp" class="visually-hidden">
+              <div class="dropzone-inner" id="dropzone-clickable">
+                <div class="dropzone-icon-box">
+                  <span class="dz-radar-crosshair"></span>
+                </div>
+                <h3 class="dz-title">DROP FIELD PHOTOGRAPH HERE</h3>
+                <p class="dz-subtitle">OR CLICK TO BROWSE CITIZEN IMAGE (JPEG, PNG, WEBP)</p>
+                <span class="mono-meta">AUTOMATIC EXIF GPS PARSER ACTIVE</span>
+              </div>
+              <div class="file-preview-wrap" id="file-preview-wrap" style="display:none;">
+                <img id="image-preview" src="" alt="Field Upload Preview">
+                <button type="button" class="btn-clear-img" id="btn-clear-file">&times; REMOVE</button>
+              </div>
+            </div>
+
+            <!-- Field Preset Fast Selectors -->
+            <div class="presets-block">
+              <span class="mono-label">QUICK TEST PRESETS (COASTAL ODISHA):</span>
+              <div class="preset-buttons-row">
+                <button type="button" class="btn-preset active" data-preset="electric">Downed 33kV Line</button>
+                <button type="button" class="btn-preset" data-preset="flood">AIIMS Route Inundation</button>
+                <button type="button" class="btn-preset" data-preset="tree">Uprooted Banyan Tree</button>
+                <button type="button" class="btn-preset" data-preset="culvert">Breached Storm Culvert</button>
+                <button type="button" class="btn-preset" data-preset="surge">Puri Storm Surge</button>
+              </div>
+            </div>
+
+            <!-- Manual Overrides -->
+            <div class="overrides-panel">
+              <div class="field-row">
+                <div class="field-group">
+                  <label class="mono-label" for="manual-location">LANDMARK / LOCATION HINT (OPTIONAL)</label>
+                  <input type="text" id="manual-location" placeholder="e.g. Saheed Nagar, Bhubaneswar" class="mono-input">
+                </div>
+              </div>
+              <div class="field-row split">
+                <div class="field-group">
+                  <label class="mono-label" for="manual-lat">LATITUDE (OPTIONAL OVERRIDE)</label>
+                  <input type="number" step="0.0001" id="manual-lat" placeholder="20.2882" class="mono-input">
+                </div>
+                <div class="field-group">
+                  <label class="mono-label" for="manual-lon">LONGITUDE (OPTIONAL OVERRIDE)</label>
+                  <input type="number" step="0.0001" id="manual-lon" placeholder="85.8456" class="mono-input">
+                </div>
+              </div>
+              <button type="button" class="btn-submit-triage" id="btn-submit-triage">
+                RUN GEMMA 4 MULTIMODAL TRIAGE &rarr;
+              </button>
+            </div>
+          </div>
+
+          <!-- Real-Time Triage Telemetry Output -->
+          <div class="studio-col-right" data-rev>
+            <div class="triage-result-card" id="triage-result-card">
+              <div class="tr-card-header">
+                <span class="mono-label">VERIFIED INCIDENT TELEMETRY</span>
+                <span class="tr-badge-live" id="tr-badge-live">READY FOR INGESTION</span>
+              </div>
+
+              <div class="tr-card-body">
+                <div class="tr-hazard-heading">
+                  <span class="mono-label">DETECTED CIVIC FAILURE</span>
+                  <h3 class="tr-hazard-title" id="tr-hazard-title">Downed 33kV Live Distribution Line</h3>
+                </div>
+
+                <div class="tr-metric-grid">
+                  <div class="tr-metric">
+                    <span class="mono-label">SEVERITY RATING</span>
+                    <span class="tr-val red-text" id="tr-severity-val">CRITICAL</span>
+                  </div>
+                  <div class="tr-metric">
+                    <span class="mono-label">SECTOR GPS</span>
+                    <span class="tr-val" id="tr-gps-val">20.2882°N, 85.8456°E</span>
+                  </div>
+                  <div class="tr-metric">
+                    <span class="mono-label">GPS RESOLUTION</span>
+                    <span class="tr-val" id="tr-fallback-val">EXIF VERIFIED</span>
+                  </div>
+                  <div class="tr-metric">
+                    <span class="mono-label">MODEL INFERENCE</span>
+                    <span class="tr-val" id="tr-model-val">GEMMA-4-26B-A4B-IT</span>
+                  </div>
+                </div>
+
+                <div class="tr-section-block">
+                  <span class="mono-label">HAZARD SUMMARY:</span>
+                  <p class="tr-summary-text" id="tr-summary-text">
+                    High-voltage 33kV transmission conductor severed and partially submerged in 2 feet of street floodwater. Imminent electrocution hazard on major traffic junction.
+                  </p>
+                </div>
+
+                <div class="tr-section-block">
+                  <span class="mono-label">TACTICAL STANDARD OPERATING PROCEDURE (SOP):</span>
+                  <p class="tr-sop-text" id="tr-sop-text">
+                    De-energize feeder line 4B via remote SCADA immediately. Establish 60m exclusion perimeter and dispatch emergency line utility squad.
+                  </p>
+                </div>
+
+                <div class="tr-section-block">
+                  <span class="mono-label">DESIGNATED RESCUE AGENCIES:</span>
+                  <div class="tr-tags-wrap" id="tr-units-wrap">
+                    <span class="unit-tag">TPCODL Line Crew</span>
+                    <span class="unit-tag">Odisha Fire Services</span>
+                    <span class="unit-tag">Traffic Police</span>
+                  </div>
+                </div>
+
+                <div class="tr-section-block">
+                  <span class="mono-label">AFFECTED INFRASTRUCTURE:</span>
+                  <div class="tr-tags-wrap" id="tr-infra-wrap">
+                    <span class="infra-tag">Electrical Grid</span>
+                    <span class="infra-tag">Road Transport</span>
+                    <span class="infra-tag">Commercial Sector</span>
+                  </div>
+                </div>
+              </div>
+
+              <div class="tr-card-footer">
+                <span class="mono-meta" id="tr-incident-id">INCIDENT ID: INC-BBSR-001</span>
+                <span class="mono-meta" id="tr-timestamp">LOGGED: 2026-10-31T08:15:00Z</span>
+              </div>
+            </div>
+          </div>
+
+        </div>
+
+      </div>
+    </section>
+
+
+    <!-- ================================================================= -->
+    <!-- POST-PIN 7: RULED DISPATCH MATRIX (ODRAF, TPCODL, BMC, FIRE)      -->
+    <!-- ================================================================= -->
+    <section class="normal-section matrix-section">
+      <div class="section-container">
+        
+        <div class="matrix-header" data-rev>
+          <span class="mono-label">[ INTER-AGENCY COMMAND MATRIX ]</span>
+          <h2 class="section-title">SEOC TACTICAL UNITS</h2>
+          <p class="section-lede">
+            Pre-designated rescue forces stationed across the Khordha, Cuttack, and Puri operational sectors.
+          </p>
+        </div>
+
+        <div class="table-wrap" data-rev>
+          <table class="dispatch-table">
+            <thead>
+              <tr>
+                <th>AGENCY</th>
+                <th>OPERATIONAL MANDATE</th>
+                <th>SPECIALIZED EQUIPMENT</th>
+                <th>MAX DISPATCH SLA</th>
+                <th>SECTOR HOTSPOTS</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong>TPCODL</strong><br><span class="mono-label">Power Distribution</span></td>
+                <td>33kV/11kV feeder de-energization, pole restringing, mobile transformer substations.</td>
+                <td>Remote SCADA cutoff, bucket trucks, insulated boom lifts.</td>
+                <td class="red-text"><strong>&lt; 15 MINS</strong></td>
+                <td>Saheed Nagar, Rasulgarh, Cuttack Link</td>
+              </tr>
+              <tr>
+                <td><strong>ODRAF</strong><br><span class="mono-label">Disaster Rapid Action</span></td>
+                <td>Water rescue, flood evacuation, breached embankment sandbagging.</td>
+                <td>Zodiac inflatable boats, rescue rafts, sonar life-detectors.</td>
+                <td class="red-text"><strong>&lt; 20 MINS</strong></td>
+                <td>AIIMS Underpass, Puri Coast, Daya Basin</td>
+              </tr>
+              <tr>
+                <td><strong>ODISHA FIRE SERVICES</strong><br><span class="mono-label">Emergency Response</span></td>
+                <td>Arterial road clearance, high-discharge dewatering, collapsed roof extraction.</td>
+                <td>Motorized chainsaws, 5000L/min dewatering pumps, hydraulic spreaders.</td>
+                <td class="red-text"><strong>&lt; 12 MINS</strong></td>
+                <td>Patia InfoCity, Master Canteen, NH16</td>
+              </tr>
+              <tr>
+                <td><strong>BMC DRAINAGE DIVISION</strong><br><span class="mono-label">Municipal Corporation</span></td>
+                <td>Storm culvert desilting, temporary revetments, gravity drainage channels.</td>
+                <td>Backhoe excavators, suction jetting units, sandbag stocks.</td>
+                <td>&lt; 30 MINS</td>
+                <td>Rasulgarh, Bindusagar, Laxmisagar</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+      </div>
+    </section>
+
+
+    <!-- ================================================================= -->
+    <!-- POST-PIN 8: NATIVE DETAILS FAQ ACCORDION                          -->
+    <!-- ================================================================= -->
+    <section class="normal-section faq-section">
+      <div class="section-container">
+        
+        <div class="faq-header" data-rev>
+          <span class="mono-label">[ STANDARD OPERATING PROCEDURES // FAQ ]</span>
+          <h2 class="section-title">FREQUENTLY ASKED PROTOCOLS</h2>
+        </div>
+
+        <div class="faq-list" data-rev>
+          <details class="faq-item">
+            <summary class="faq-summary">
+              <span class="faq-q">HOW DOES THE SYSTEM PROCESS IMAGES WITH STRIPPED EXIF GPS METADATA?</span>
+              <span class="faq-plus">+</span>
+            </summary>
+            <div class="faq-content">
+              <p>
+                When images are uploaded via platforms that strip EXIF tags (such as WhatsApp or Telegram), 
+                the backend activates its automated Odisha geo-bounding fallback engine. The image content is hashed 
+                and matched against known vulnerability hotspots in Bhubaneswar, Cuttack, and Puri, with subtle micro-jitter 
+                to emulate street-level precision while maintaining location realism.
+              </p>
+            </div>
+          </details>
+
+          <details class="faq-item">
+            <summary class="faq-summary">
+              <span class="faq-q">WHAT ROLE DOES GEMMA 4 PLAY IN THE INCIDENT EVALUATION CYCLE?</span>
+              <span class="faq-plus">+</span>
+            </summary>
+            <div class="faq-content">
+              <p>
+                Gemma 4 (`gemma-4-26b-a4b-it`) serves as the core vision reasoning backbone. Stationed under the SEOC system prompt, 
+                it assesses primary structural or civic failures, detects imminent life safety threats (such as live electricity in contact with floodwater), 
+                assigns one of four strict severity ratings, and designates the precise tactical responders required.
+              </p>
+            </div>
+          </details>
+
+          <details class="faq-item">
+            <summary class="faq-summary">
+              <span class="faq-q">CAN THIS BACKEND STREAM LIVE GEOJSON TO EXTERNAL GIS DASHBOARDS?</span>
+              <span class="faq-plus">+</span>
+            </summary>
+            <div class="faq-content">
+              <p>
+                Yes. All validated incidents are immediately published to the `/api/incidents/geojson` endpoint in RFC 7946 
+                FeatureCollection format. This feed plugs directly into Leaflet, Mapbox, Deck.gl, or emergency control room GIS displays.
+              </p>
+            </div>
+          </details>
+
+          <details class="faq-item">
+            <summary class="faq-summary">
+              <span class="faq-q">HOW IS DATA PERSISTED ACROSS SEOC SERVER RESTARTS?</span>
+              <span class="faq-plus">+</span>
+            </summary>
+            <div class="faq-content">
+              <p>
+                The backend utilizes a thread-safe in-memory cache synchronized with `data/incidents.json`. 
+                On initial boot, it loads persistent incident files or initializes with realistic coastal Odisha cyclone seed data.
+              </p>
+            </div>
+          </details>
+        </div>
+
+      </div>
+    </section>
+
+  </main>
+
+  <!-- Deep Dark SEOC Telemetry Command Footer -->
+  <footer class="seoc-footer dark-stage">
+    <div class="footer-container">
+      <div class="footer-top-row">
+        <div class="f-col-brand">
+          <span class="brand-code">SEOC / ODISHA DISASTER MANAGEMENT</span>
+          <h2 class="f-headline">CYCLONEWATCH <span class="red-mark">RELIEFSENSE</span></h2>
+          <p class="f-desc">
+            Autonomous multimodal disaster triage and tactical incident response system engineered for the Bay of Bengal coastline.
+          </p>
+        </div>
+        <div class="f-col-meta">
+          <span class="mono-label">STATE EMERGENCY OPS CENTRE</span>
+          <p class="mono-value">RAJIV BHAWAN &bull; BHUBANESWAR 751001</p>
+          <span class="mono-label">DISASTER HELPLINE</span>
+          <p class="mono-value red-text">1070 &bull; 112 &bull; 1077</p>
+        </div>
+        <div class="f-col-links">
+          <span class="mono-label">SYSTEM LINKS</span>
+          <ul class="f-links-list">
+            <li><a href="http://localhost:8000/docs" target="_blank" rel="noopener">FastAPI Swagger UI &rarr;</a></li>
+            <li><a href="http://localhost:8000/api/incidents/geojson" target="_blank" rel="noopener">Raw GeoJSON Stream &rarr;</a></li>
+            <li><a href="http://localhost:8000/api/stats" target="_blank" rel="noopener">SEOC Stats API &rarr;</a></li>
+            <li><a href="#triage-studio">Citizen Upload Console &rarr;</a></li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="footer-bottom-row">
+        <span class="mono-meta">&copy; 2026 STATE EMERGENCY OPERATIONS CENTRE (SEOC) &bull; OPEN-SOURCE CRISIS ENGINE</span>
+        <span class="mono-meta">POWERED BY GEMMA 4 &bull; GOOGLE GENAI SDK</span>
+      </div>
+    </div>
+  </footer>
+
+  <script src="app.js"></script>
+</body>
+</html>

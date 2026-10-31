@@ -1,0 +1,177 @@
+[
+  {
+    "id": "inc-bbsr-001",
+    "latitude": 20.2882,
+    "longitude": 85.8456,
+    "location_name": "Saheed Nagar Janpath Crossing, Bhubaneswar",
+    "hazard_type": "Downed 33kV Live Distribution Line",
+    "severity": "CRITICAL",
+    "affected_infrastructure": [
+      "Electrical Grid",
+      "Road Transport",
+      "Commercial Sector"
+    ],
+    "hazard_summary": "High-voltage 33kV transmission conductor severed and partially submerged in 2 feet of street floodwater. Imminent electrocution hazard on major traffic junction.",
+    "recommended_response": "De-energize feeder line 4B via remote SCADA immediately. Establish 60m exclusion perimeter and dispatch emergency line utility squad.",
+    "required_personnel": [
+      "TPCODL Line Crew",
+      "Odisha Fire Services",
+      "Traffic Police"
+    ],
+    "timestamp": "2026-10-31T08:15:00Z",
+    "image_filename": "seed_downed_33kv_line.jpg",
+    "is_gps_fallback": false
+  },
+  {
+    "id": "inc-bbsr-002",
+    "latitude": 20.252,
+    "longitude": 85.778,
+    "location_name": "AIIMS - Khandagiri Hospital Arterial, Bhubaneswar",
+    "hazard_type": "Hospital Route Flash Inundation",
+    "severity": "CRITICAL",
+    "affected_infrastructure": [
+      "Emergency Healthcare Access",
+      "Road Transport"
+    ],
+    "hazard_summary": "Underpass connecting to AIIMS hospital completely flooded with rapid 4.2-foot water torrent. Multiple ambulances stranded on approach ramp.",
+    "recommended_response": "Deploy high-capacity mobile dewatering pump trailers. Mobilize ODRAF Zodiac inflatable boats for patient transit transfer.",
+    "required_personnel": [
+      "ODRAF Rapid Rescue",
+      "BMC Drainage Division",
+      "Odisha Fire Services"
+    ],
+    "timestamp": "2026-10-31T08:42:00Z",
+    "image_filename": "seed_hospital_arterial_flood.jpg",
+    "is_gps_fallback": false
+  },
+  {
+    "id": "inc-bbsr-003",
+    "latitude": 20.3542,
+    "longitude": 85.8193,
+    "location_name": "Patia InfoCity Main Boulevard, Bhubaneswar",
+    "hazard_type": "Fallen Banyan Tree Blockage",
+    "severity": "HIGH",
+    "affected_infrastructure": [
+      "Transport",
+      "Optical Fiber Telecom"
+    ],
+    "hazard_summary": "Extensive heritage tree uprooted across dual 3-lane boulevard, severing municipal power poles and fiber telemetry cables.",
+    "recommended_response": "Deploy motorized chainsaw teams and 20-ton crane. Clear single westbound emergency lane within 45 minutes.",
+    "required_personnel": [
+      "Odisha Fire Services",
+      "BMC Tree Squad",
+      "Forest Division"
+    ],
+    "timestamp": "2026-10-31T09:10:00Z",
+    "image_filename": "seed_uprooted_tree_patia.jpg",
+    "is_gps_fallback": false
+  },
+  {
+    "id": "inc-bbsr-004",
+    "latitude": 20.3015,
+    "longitude": 85.8647,
+    "location_name": "Rasulgarh NH16 Service Underpass, Bhubaneswar",
+    "hazard_type": "Breached Stormwater Culvert",
+    "severity": "MEDIUM",
+    "affected_infrastructure": [
+      "Storm Drainage Network",
+      "Service Roadway"
+    ],
+    "hazard_summary": "Structural masonry failure on primary drainage culvert causing localized 1.5-foot backflow onto national highway service lane.",
+    "recommended_response": "Install temporary sandbag revetment along culvert crest. Restrict heavy commercial vehicle movement on affected shoulder.",
+    "required_personnel": [
+      "BMC Drainage Division",
+      "NHAI Road Maintenance"
+    ],
+    "timestamp": "2026-10-31T09:35:00Z",
+    "image_filename": "seed_culvert_overflow.jpg",
+    "is_gps_fallback": true
+  },
+  {
+    "id": "inc-bbsr-005",
+    "latitude": 20.239,
+    "longitude": 85.834,
+    "location_name": "Old Town Bindusagar Lake Embankment, Bhubaneswar",
+    "hazard_type": "Structural Wall Collapse & Road Debris",
+    "severity": "MEDIUM",
+    "affected_infrastructure": [
+      "Heritage Precinct",
+      "Pedestrian Walkways"
+    ],
+    "hazard_summary": "40-meter perimeter boundary wall collapsed inward due to saturated foundation and wind gusts. Roadway narrowed to single lane.",
+    "recommended_response": "Clear masonry rubble with compact skid-steer loader. Inspect adjacent boundary walls for stability hazards.",
+    "required_personnel": [
+      "BMC Engineering Squad",
+      "Civil Defence Volunteers"
+    ],
+    "timestamp": "2026-10-31T10:00:00Z",
+    "image_filename": "seed_wall_collapse_oldtown.jpg",
+    "is_gps_fallback": true
+  },
+  {
+    "id": "inc-bbsr-006",
+    "latitude": 19.8135,
+    "longitude": 85.8312,
+    "location_name": "Puri Coastal Marine Drive Section, Odisha",
+    "hazard_type": "Coastal Storm Surge Sand Inundation",
+    "severity": "HIGH",
+    "affected_infrastructure": [
+      "Coastal Highway",
+      "Protective Seawall Embankment"
+    ],
+    "hazard_summary": "Tidal surge wave action has deposited 3 feet of sand and ocean debris across 200m of the coastal highway corridor. Vehicle access severed.",
+    "recommended_response": "Barricade coastal stretch from civilian traffic. Deploy front-end loaders and earth-moving equipment once surge tide recedes.",
+    "required_personnel": [
+      "Works Department Odisha",
+      "Odisha Police Coastal Unit",
+      "ODRAF"
+    ],
+    "timestamp": "2026-10-31T10:25:00Z",
+    "image_filename": "seed_puri_surge_debris.jpg",
+    "is_gps_fallback": false
+  },
+  {
+    "id": "inc-a1d68177",
+    "latitude": 20.35255,
+    "longitude": 85.8169,
+    "location_name": "Patia InfoCity Corridor, Bhubaneswar, Odisha",
+    "hazard_type": "Structural Wall Collapse & Road Debris",
+    "severity": "MEDIUM",
+    "affected_infrastructure": [
+      "Residential Enclosure",
+      "Secondary Roadway"
+    ],
+    "hazard_summary": "Boundary wall collapse resulting from cyclone wind loading and saturated soil foundation. Sidewalk obstructed with masonry rubble.",
+    "recommended_response": "Clear secondary lane debris with backhoe loader and inspect adjoining structures for foundation subsidence.",
+    "required_personnel": [
+      "BMC Drainage",
+      "Municipal Engineering Squad",
+      "Civil Defence"
+    ],
+    "timestamp": "2026-10-31T10:04:24.591110+00:00",
+    "image_filename": "inc-a1d68177.jpg",
+    "is_gps_fallback": true
+  },
+  {
+    "id": "inc-ae580e6c",
+    "latitude": 20.35255,
+    "longitude": 85.8169,
+    "location_name": "Patia InfoCity Corridor, Bhubaneswar, Odisha",
+    "hazard_type": "Structural Wall Collapse & Road Debris",
+    "severity": "MEDIUM",
+    "affected_infrastructure": [
+      "Residential Enclosure",
+      "Secondary Roadway"
+    ],
+    "hazard_summary": "Boundary wall collapse resulting from cyclone wind loading and saturated soil foundation. Sidewalk obstructed with masonry rubble.",
+    "recommended_response": "Clear secondary lane debris with backhoe loader and inspect adjoining structures for foundation subsidence.",
+    "required_personnel": [
+      "BMC Drainage",
+      "Municipal Engineering Squad",
+      "Civil Defence"
+    ],
+    "timestamp": "2026-10-31T10:04:43.346675+00:00",
+    "image_filename": "inc-ae580e6c.jpg",
+    "is_gps_fallback": true
+  }
+]
