@@ -48,6 +48,7 @@ app.mount("/uploads", StaticFiles(directory=str(UPLOADS_DIR)), name="uploads")
 
 FRONTEND_DIR = Path(__file__).resolve().parent.parent.parent / "frontend"
 
+@app.get("/", tags=["System"])
 @app.get("/api", tags=["System"])
 async def root_status():
     """
@@ -263,7 +264,8 @@ async def reset_seed_data():
     return {"message": "Incident database reset and populated with seed data.", "count": count}
 
 
-# Mount frontend static directory if exists for seamless landing page experience
-if FRONTEND_DIR.exists():
-    app.mount("/", StaticFiles(directory=str(FRONTEND_DIR), html=True), name="frontend")
+# Mount frontend static directory if exists locally
+if FRONTEND_DIR.exists() and (FRONTEND_DIR / "index.html").exists():
+    app.mount("/site", StaticFiles(directory=str(FRONTEND_DIR), html=True), name="frontend")
+
 

@@ -21,8 +21,12 @@ function getBackendUrl() {
   const stored = localStorage.getItem('CYCLONE_BACKEND_URL');
   if (stored) return stored;
 
-  // If served directly from FastAPI (same origin), use window.location.origin
-  if (window.location.port === '8000' || (window.location.origin && !window.location.origin.includes('vercel.app'))) {
+  // When running on Vercel, default to the deployed Vercel backend
+  if (window.location.hostname.includes('vercel.app')) {
+    return 'https://cyclonewatch-ai-backend.vercel.app';
+  }
+  // If served directly from local FastAPI
+  if (window.location.port === '8000') {
     return window.location.origin;
   }
   return 'http://localhost:8000';
