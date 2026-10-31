@@ -10,7 +10,25 @@
  * 5. Live field ingestion studio integrated with FastAPI backend (`/api/triage`)
  */
 
-const BACKEND_BASE_URL = 'http://localhost:8000';
+// Dynamic Backend Base URL resolution for local and Vercel cloud deployments
+function getBackendUrl() {
+  const urlParams = new URLSearchParams(window.location.search);
+  const paramUrl = urlParams.get('backend');
+  if (paramUrl) {
+    localStorage.setItem('CYCLONE_BACKEND_URL', paramUrl);
+    return paramUrl;
+  }
+  const stored = localStorage.getItem('CYCLONE_BACKEND_URL');
+  if (stored) return stored;
+
+  // If served directly from FastAPI (same origin), use window.location.origin
+  if (window.location.port === '8000' || (window.location.origin && !window.location.origin.includes('vercel.app'))) {
+    return window.location.origin;
+  }
+  return 'http://localhost:8000';
+}
+
+let BACKEND_BASE_URL = getBackendUrl();
 
 document.addEventListener('DOMContentLoaded', () => {
   initPosterClampChecks();
@@ -764,6 +782,23 @@ async function probeBackendHealth() {
   const pillDot = document.querySelector('.status-indicator-dot');
   const navCounter = document.getElementById('nav-incident-counter');
 
+  const statusPill = document.getElementById('backend-status-pill');
+  if (statusPill && !statusPill.dataset.hasListener) {
+    statusPill.dataset.hasListener = 'true';
+    statusPill.style.cursor = 'pointer';
+    statusPill.title = 'Click to connect or change backend API URL';
+    statusPill.addEventListener('click', () => {
+      const current = localStorage.getItem('CYCLONE_BACKEND_URL') || BACKEND_BASE_URL;
+      const input = prompt('Enter CycloneWatch AI Backend API URL (e.g. https://your-backend.onrender.com or http://localhost:8000):', current);
+      if (input !== null && input.trim() !== '') {
+        const cleanUrl = input.trim().replace(/\/$/, '');
+        localStorage.setItem('CYCLONE_BACKEND_URL', cleanUrl);
+        BACKEND_BASE_URL = cleanUrl;
+        probeBackendHealth();
+      }
+    });
+  }
+
   try {
     const res = await fetch(`${BACKEND_BASE_URL}/api/health`, { cache: 'no-store' });
     if (res.ok) {
@@ -780,7 +815,8 @@ async function probeBackendHealth() {
       throw new Error();
     }
   } catch {
-    if (pillText) pillText.textContent = 'STANDALONE MODE • SEOC ENGINE';
+    if (pillText) pillText.textContent = 'STANDALONE MODE • SEOC ENGINE (CLICK TO CONNECT)';
     if (pillDot) pillDot.style.backgroundColor = '#d96b27';
   }
 }
+
